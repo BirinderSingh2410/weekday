@@ -1,0 +1,17 @@
+p{
+    font-size: 1em;
+}
+.company-content{
+    display: flex;
+    align-items: center;
+}
+.company-content > div {
+    line-height: 1vh;
+    margin-left: 10px;
+}
+.card-content{
+    margin-top: 2vh;
+}
+.about-content > p{
+    line-height: 1vh;
+}
