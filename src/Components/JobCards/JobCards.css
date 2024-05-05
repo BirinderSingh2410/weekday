@@ -3,15 +3,19 @@ p{
 }
 .company-content{
     display: flex;
-    align-items: center;
+    margin-top: 1vh;
 }
 .company-content > div {
     line-height: 1vh;
     margin-left: 10px;
+    align-items: start;
 }
 .card-content{
     margin-top: 2vh;
 }
 .about-content > p{
     line-height: 1vh;
+}
+.card-box{
+    margin: 3vh;
 }
