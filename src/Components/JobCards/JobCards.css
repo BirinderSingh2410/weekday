@@ -1,21 +1,25 @@
-p{
+p {
     font-size: 1em;
-}
-.company-content{
+  }
+  .company-content {
     display: flex;
     margin-top: 1vh;
-}
-.company-content > div {
+  }
+  .company-content > div {
     line-height: 1vh;
     margin-left: 10px;
     align-items: start;
-}
-.card-content{
+  }
+  .card-content {
     margin-top: 2vh;
-}
-.about-content > p{
+  }
+  .about-content > p {
     line-height: 1vh;
-}
-.card-box{
+  }
+  .card-box {
     margin: 3vh;
-}
+  }
+  .loader {
+    margin: 2%;
+  }
+  

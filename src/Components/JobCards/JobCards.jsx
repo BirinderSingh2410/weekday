@@ -52,7 +52,7 @@ const JobCards = ({ data }) => {
         </div>
         <CardContent>
           <p style={{ fontWeight: "400", color: "grey" }}>
-            Estimated Salary: &#x20B9;{data?.maxJdSalary}-&#x20B9;{data?.minJdSalary} LPA
+            Estimated Salary: &#x20B9;{data?.maxJdSalary}{data?.minJdSalary == null ? null : (<span>-&#x20B9;{data?.minJdSalary}LPA</span>)}
           </p>
           <div className="card-content">
             <div className="about-content">
@@ -78,7 +78,6 @@ const JobCards = ({ data }) => {
           <Button
             variant="contained"
             sx={{ marginTop: "10px", width: "75%" }}
-            onClick={() => dispatch(changeLimit())}
           >
             Easy Apply
           </Button>
