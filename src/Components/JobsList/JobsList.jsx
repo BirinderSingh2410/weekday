@@ -94,16 +94,18 @@ const JobsList = () => {
   }, [jobList]);
 
   useEffect(() => {
-    if (orgJdList.length > 0) {
-      let jdList = orgJdList;
+      dispatch(setData(checkFilter(orgJdList)));
+    }, [selectRole, selectMsb, selectExp, remote, companyName]);
+
+  const checkFilter = (jdList) => {
       if (selectRole !== "" && selectRole !== null) {
         jdList = jdList.filter((item) => item.jobRole === selectRole);
       }
       if (selectMsb !== "" && selectMsb !== null) {
-        jdList = jdList.filter((item) => item.jobRole === selectMsb);
+        jdList = jdList.filter((item) => item.minJdSalary === selectMsb);
       }
       if (selectExp !== "" && selectExp !== null) {
-        jdList = jdList.filter((item) => item.jobRole === selectExp);
+        jdList = jdList.filter((item) => item.minExp === selectExp);
       }
       if (remote) {
         jdList = jdList.filter((item) => item.location === "remote");
@@ -111,10 +113,8 @@ const JobsList = () => {
       if (companyName !== "" && companyName !== null) {
         jdList = jdList.filter((item) => item.companyName === companyName);
       }
-      // console.log(jdList);
-      dispatch(setData(jdList));
-    }
-  }, [selectRole, selectMsb, selectExp, remote, companyName]);
+      return jdList;
+  }
 
   const fetchMore = async () => {
     const myHeaders = new Headers();
@@ -138,7 +138,7 @@ const JobsList = () => {
       .then((result) => {
         setOrgJdList(result.jdList);
         setOffset(offset + 10);
-        dispatch(setData([...jobList, ...result.jdList]));
+        dispatch(setData([...jobList, ...checkFilter(result.jdList)]));
       })
       .catch((error) => console.error(error));
   };
@@ -166,24 +166,6 @@ const JobsList = () => {
                 ))}
               </Select>
             </FormControl>
-            {/* <FormControl sx={{ m: 1, minWidth: 80 }}>
-              <InputLabel id="number-label">Number of Employees</InputLabel>
-              <Select
-                labelId="number-label"
-                id="demo-simple-select-autowidth"
-                value={age}
-                onChange={handleChange}
-                autoWidth
-                label="Age"
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Twenty</MenuItem>
-                <MenuItem value={21}>Twenty one</MenuItem>
-                <MenuItem value={22}>Twenty one and a half</MenuItem>
-              </Select>
-            </FormControl> */}
             <FormControl sx={{ m: 1, minWidth: 80 }}>
               <InputLabel id="experience-label">Experience</InputLabel>
               <Select
@@ -261,7 +243,7 @@ const JobsList = () => {
             dataLength={jobList.length > 0 ? jobList.length : null}
             next={fetchMore}
             hasMore={jobList.length !== limit}
-            loader={<h4>Loading...</h4>}
+            loader={<div style={{display:"flex", justifyContent:"center"}}><h4>Loading...</h4></div>}
             endMessage={
               <p style={{ textAlign: "center" }}>
                 <b>Yay! You have seen it all</b>
