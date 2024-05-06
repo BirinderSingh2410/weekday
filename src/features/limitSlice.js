@@ -3,11 +3,11 @@ import { createSlice } from '@reduxjs/toolkit'
 export const limitSlice = createSlice({
   name: 'limit',
   initialState: {
-    value: 10,
+    value: 0,
   },
   reducers: {
-    changeLimit: (state) => {
-      state.value += 10
+    changeLimit: (state,action) => {
+      state.value += action.payload
     },
     // decrement: (state) => {
     //   state.value -= 1

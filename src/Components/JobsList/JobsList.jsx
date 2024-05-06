@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import JobCards from "../JobCards/JobCards";
 import { useSelector, useDispatch } from "react-redux";
 import { setData } from "../../features/dataSlice";
+import { changeLimit } from "../../features/limitSlice";
 import "../JobsList/JobsList.css";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Loader from "../Loader/Loader";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const JobsList = () => {
   const dispatch = useDispatch();
   const jobList = useSelector((state) => state.data.value);
+  const limit = useSelector((state) => state.limit.value);
   const [loader, setLoader] = useState(false);
   const [roles, setRoles] = useState(new Set());
   const [exp, setExp] = useState(new Set());
@@ -23,6 +26,7 @@ const JobsList = () => {
   const [companyName, setCompanyName] = useState("");
   const [remote, setRemote] = React.useState(false);
   const [orgJdList, setOrgJdList] = useState([]);
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     setLoader(true);
@@ -46,7 +50,9 @@ const JobsList = () => {
       .then((response) => response.json())
       .then((result) => {
         dispatch(setData(result.jdList));
+        dispatch(changeLimit(result.totalCount));
         setOrgJdList(result.jdList);
+        setOffset(offset + 10);
         setTimeout(() => setLoader(false), 1000);
       })
       .catch((error) => console.error(error));
@@ -90,20 +96,52 @@ const JobsList = () => {
   useEffect(() => {
     if (orgJdList.length > 0) {
       let jdList = orgJdList;
-      if(selectRole !== "" && selectRole !== null){
-        jdList = jdList.filter((item) => item.jobRole === selectRole)
+      if (selectRole !== "" && selectRole !== null) {
+        jdList = jdList.filter((item) => item.jobRole === selectRole);
       }
-      if(selectMsb !== "" && selectMsb !== null){
-        jdList = jdList.filter((item) => item.jobRole === selectMsb)
+      if (selectMsb !== "" && selectMsb !== null) {
+        jdList = jdList.filter((item) => item.jobRole === selectMsb);
       }
-      if(selectExp !== "" && selectExp !== null){
-        jdList = jdList.filter((item) => item.jobRole === selectExp)
+      if (selectExp !== "" && selectExp !== null) {
+        jdList = jdList.filter((item) => item.jobRole === selectExp);
       }
-      console.log(jdList);
+      if (remote) {
+        jdList = jdList.filter((item) => item.location === "remote");
+      }
+      if (companyName !== "" && companyName !== null) {
+        jdList = jdList.filter((item) => item.companyName === companyName);
+      }
+      // console.log(jdList);
       dispatch(setData(jdList));
     }
-  }, [selectRole, selectMsb, selectExp]);
+  }, [selectRole, selectMsb, selectExp, remote, companyName]);
 
+  const fetchMore = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const body = JSON.stringify({
+      limit: 10,
+      offset: offset,
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body,
+    };
+
+    fetch(
+      "https://api.weekday.technology/adhoc/getSampleJdJSON",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setOrgJdList(result.jdList);
+        setOffset(offset + 10);
+        dispatch(setData([...jobList, ...result.jdList]));
+      })
+      .catch((error) => console.error(error));
+  };
   return (
     <div className="list-box">
       {!loader ? (
@@ -171,7 +209,7 @@ const JobsList = () => {
                 value={remote}
                 onChange={(e) => setRemote(e.target.value)}
                 autoWidth
-                label="Age"
+                label="remote"
               >
                 <MenuItem value={true}>Yes</MenuItem>
                 <MenuItem value={false}>No</MenuItem>
@@ -215,12 +253,23 @@ const JobsList = () => {
             </FormControl>
           </div>
           <div className="list-content">
-            {jobList.length > 0
-              ? jobList.map((data, index) => (
-                  <JobCards data={data} key={index} />
-                ))
-              : null}
-            <JobCards />
+            <InfiniteScroll
+              dataLength={jobList.length > 0 ? jobList.length : null} //This is important field to render the next data
+              next={fetchMore}
+              hasMore={jobList.length !== limit}
+              loader={<h4>Loading...</h4>}
+              endMessage={
+                <p style={{ textAlign: "center" }}>
+                  <b>Yay! You have seen it all</b>
+                </p>
+              }
+            >
+              {jobList.length > 0
+                ? jobList.map((data, index) => (
+                    <JobCards data={data} key={index} />
+                  ))
+                : null}
+            </InfiniteScroll>
           </div>
         </div>
       ) : (
