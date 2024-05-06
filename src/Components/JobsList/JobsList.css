@@ -6,9 +6,13 @@
   .list-content {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
   }
   .search-box {
       width: 100%;
       align-items: center;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
   }
   

@@ -156,6 +156,7 @@ const JobsList = () => {
                 onChange={(e) => setSelectRole(e.target.value)}
                 autoWidth
                 label="role"
+                sx={{width:"200px"}}
               >
                 <MenuItem value="">None</MenuItem>
                 {Array.from(roles).map((item, index) => (
@@ -192,6 +193,7 @@ const JobsList = () => {
                 onChange={(e) => setSelectExp(e.target.value)}
                 autoWidth
                 label="exp"
+                sx={{width:"200px"}}
               >
                 <MenuItem value="">None</MenuItem>
                 {Array.from(exp).map((item, index) => (
@@ -210,6 +212,7 @@ const JobsList = () => {
                 onChange={(e) => setRemote(e.target.value)}
                 autoWidth
                 label="remote"
+                sx={{width:"80px"}}
               >
                 <MenuItem value={true}>Yes</MenuItem>
                 <MenuItem value={false}>No</MenuItem>
@@ -224,6 +227,7 @@ const JobsList = () => {
                 onChange={(e) => setSelectMsb(e.target.value)}
                 autoWidth
                 label="msb"
+                sx={{width:"200px"}}
               >
                 <MenuItem value="">None</MenuItem>
                 {Array.from(msb).map((item, index) => (
@@ -242,6 +246,7 @@ const JobsList = () => {
                 onChange={(e) => setCompanyName(e.target.value)}
                 autoWidth
                 label="msb"
+                sx={{width:"300px"}}
               >
                 <MenuItem value="">None</MenuItem>
                 {Array.from(companySet).map((item, index) => (
@@ -252,25 +257,25 @@ const JobsList = () => {
               </Select>
             </FormControl>
           </div>
-          <div className="list-content">
-            <InfiniteScroll
-              dataLength={jobList.length > 0 ? jobList.length : null} //This is important field to render the next data
-              next={fetchMore}
-              hasMore={jobList.length !== limit}
-              loader={<h4>Loading...</h4>}
-              endMessage={
-                <p style={{ textAlign: "center" }}>
-                  <b>Yay! You have seen it all</b>
-                </p>
-              }
-            >
+          <InfiniteScroll
+            dataLength={jobList.length > 0 ? jobList.length : null}
+            next={fetchMore}
+            hasMore={jobList.length !== limit}
+            loader={<h4>Loading...</h4>}
+            endMessage={
+              <p style={{ textAlign: "center" }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }
+          >
+            <div className="list-content">
               {jobList.length > 0
                 ? jobList.map((data, index) => (
                     <JobCards data={data} key={index} />
                   ))
                 : null}
-            </InfiniteScroll>
-          </div>
+            </div>
+          </InfiniteScroll>
         </div>
       ) : (
         <Loader />
