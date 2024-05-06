@@ -13,16 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeLimit } from "../../features/limitSlice";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "40%",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
 
 const JobCards = ({ data }) => {
   const limit = useSelector((state) => state.limit.value);

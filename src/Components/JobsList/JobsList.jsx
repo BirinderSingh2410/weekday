@@ -28,6 +28,7 @@ const JobsList = () => {
   const [orgJdList, setOrgJdList] = useState([]);
   const [offset, setOffset] = useState(0);
 
+  //This is the initial call for the api to reterive data
   useEffect(() => {
     setLoader(true);
     const myHeaders = new Headers();
@@ -58,6 +59,7 @@ const JobsList = () => {
       .catch((error) => console.error(error));
   }, []);
 
+  //This is basically to update the options of the filter according to updated JD Lists
   useEffect(() => {
     if (jobList.length > 0) {
       jobList.map((item) => {
@@ -93,10 +95,13 @@ const JobsList = () => {
     }
   }, [jobList]);
 
+  // This is used when there is any filter change
   useEffect(() => {
       dispatch(setData(checkFilter(orgJdList)));
     }, [selectRole, selectMsb, selectExp, remote, companyName]);
 
+
+  // This is used to return the list with filters applied
   const checkFilter = (jdList) => {
       if (selectRole !== "" && selectRole !== null) {
         jdList = jdList.filter((item) => item.jobRole === selectRole);
@@ -116,6 +121,7 @@ const JobsList = () => {
       return jdList;
   }
 
+  // This function is used to fetch data to implement infinite scrolling.  
   const fetchMore = async () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
